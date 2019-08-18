@@ -1,0 +1,137 @@
+\documentclass{report}
+
+\usepackage{amsmath}
+
+\usepackage{CJK}
+
+\usepackage{caption}
+
+\usepackage{graphicx, subfig}
+
+\begin{document}
+
+\begin{CJK}{GBK}{song}
+
+\begin{center}  % 居中
+\quad \\vspace{3cm}  % 间距
+\includegraphics[width=3in]{cover.jpeg}\\vspace{1cm}
+\heiti{\Huge{《九阴真经》学习笔记}}\\vspace{1cm}
+\Large {1218年3月21日} \\vspace{0.5cm}
+梅超风
+\end{center}
+\vspace{4cm}
+书名：《九阴真经》\作者：黄裳\出版：大宋皇家出版社\版次：1164年8月第1版\书号：ISBN 7-181-9527
+\thispagestyle{empty}
+\clearpage  % 清除当页页码
+
+首先，如果空间坐标中，两不同坐标系如果原点重合，但是两坐标系在空间上存在角度的错位，A系与B系内的点相互转换存在转换关系：
+$$X_A=X_Bcos(X_A,X_B)+Y_Bcos(cosX_A,Y_B)+Z_Bcos(X_A,Z_B)$$
+$$Y_A=X_Bcos(Y_A,X_B)+Y_Bcos(cosY_A,Y_B)+Z_Bcos(Y_A,Z_B)$$
+$$Z_A=X_Bcos(Z_A,X_B)+Y_Bcos(cosZ_A,Y_B)+Z_Bcos(Z_A,Z_B)$$
+
+通过矩阵对上式进行表达，可表示为：
+$$r_A=R_B^Ar_B$$
+
+其中,
+ $$R_B^A=\left(
+    \begin{array}{ccc}
+    cos(X_A,X_B)&cos(X_A,Y_B)&cos(X_A,Z_B)\\
+    cos(Y_A,X_B)&cos(Y_A,Y_B)&cos(Y_A,Z_B)\\
+    cos(Z_A,X_B)&cos(Z_A,Y_B)&cos(Z_A,Z_B)
+    \end{array}
+    \right)$$
+
+$$r_A=(X_A,Y_A,Z_A)^T$$
+
+$$r_B=(X_B,Y_B,Z_B)^T$$
+
+若系A为参考系，我们称$R_B^A$为机器人关节的姿态矩阵。
+此外，若A系与B系的原点不重合，从A系原点坐标到B系原点坐标可表示为：
+$$P_B^A=(X_B^A,Y_B^A,Z_B^A)$$
+
+我们称$P_B^A$机器人关节的位置矩阵。
+因此，从B系转换到A参考系的位置空间转换可表示为：
+$$r_A=R_B^Ar_B+P_A^B$$
+
+合并后表示为：
+$$r_A=T_B^Ar_B$$
+
+其中,
+$$T_B^A=\left(
+    \begin{array}{cccc}
+    cos(X_A,X_B)&cos(X_A,Y_B)&cos(X_A,Z_B)&X_B^A\\
+    cos(Y_A,X_B)&cos(Y_A,Y_B)&cos(Y_A,Z_B)&Y_B^A\\
+    cos(Z_A,X_B)&cos(Z_A,Y_B)&cos(Z_A,Z_B)&Z_B^A\\
+    0&0&0&1
+    \end{array}
+    \right)$$
+
+我们称这里的$T_B^A$为位姿矩阵，它结合了空间位置矩阵与姿态矩阵。
+
+此外,
+$$r_A=(X_1,X_2,X_3,X_4)$$
+
+我们称这里的$r_A$为空间齐次坐标，与一般空间坐标存在以下关系：
+$$X=\frac{X_1}{X_4},Y=\frac{X_2}{X_4},Z=\frac{X_3}{X_4}$$
+在机器人学中，我们习惯将$X_4$取为1方便计算。
+
+
+设空间六连杆机器人每两个连杆之间的位姿变换关系为矩阵A，则其末端关节相对于基础参考系的位姿矩阵可表示为$T_6$，其中，
+$$T_6=A_1A_2A_3A_4A_5A_6$$
+
+其表示形式为：
+$$T_6=\left(
+    \begin{array}{cccc}
+    n_X&o_X&a_X&p_X\\
+    n_Y&o_Y&a_Y&p_Y\\
+    n_Z&o_Z&a_Z&p_Z\\
+    0&0&0&1
+    \end{array}
+    \right)$$
+
+现在为了确定空间中机器人两连杆之间的位姿矩阵，引入了D-H参数,D-H参数包含四个，确定了它们，也就确定了两连杆之间的位姿矩阵，如图1，
+
+\end{CJK}
+
+ \begin{figure}
+  \centering
+  \includegraphics[width=.8\textwidth]{picture1.png}
+  \caption{D-H}
+  \label{img}
+\end{figure}
+
+\begin{CJK}{GBK}{song}
+（1）坐标系的建立：
+
+1）Zi轴在i杆的小标号轴线上；
+
+2）Zi轴为i杆两个轴的公垂线，由小标号指向大标号。
+
+（2）D-H参数的规定：
+
+1) i杆的杆长ai为i杆公垂线长度，标量；
+
+2) i杆的扭转角$\alpha$i为Zi轴到Zi+1轴，绕Xi轴，代数量；
+
+ 3) i杆相对于i-1杆的转角$\theta$i为Xi-1轴到Xi轴，绕Zi轴，代数量；
+
+ 4) i杆相对于i-1杆的安装距离di为Xi-1轴到Xi轴，沿Zi轴，代数量。
+
+
+ 在建立了D-H参数后，便可以通过该参数求出机器人关节之间的位姿变换矩阵，其变换关系为：
+
+ $$T_i^{I-1}=Rot(x,\alpha_{i-1})Trans(\alpha_{i-1},0,0)Trans(0,0,d_i)Rot(z,\theta_i)$$
+ $$=\left(
+    \begin{array}{cccc}
+    cos(\theta_i)&-sin(\theta_i)&0&\alpha_{i-1}\\
+    cos(\alpha_{i-1})sin(\theta_i)&cos(\alpha_{i-1})cos(\theta_i)&-sin(\alpha_{i-1})&-d_isin(\alpha_{i-1})\\
+    sin(\alpha_{i-1})sin(\theta_i)&sin(\alpha_{i-1})cos(\theta_i)&cos(\alpha_{i-1})&d_icos(\alpha_{i-1})\\
+    0&0&0&1
+    \end{array}
+    \right)$$
+
+ 通过将由D-H参数求得的位姿矩阵带入$T_6=A_1A_2A_3A_4A_5A_6$，最后求出的$T_6$就是末端关节的位姿矩阵，代入各关节参数便求出来末端位置。
+
+ \end{CJK}
+
+\end{document}
